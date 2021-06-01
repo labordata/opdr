@@ -1,4 +1,3 @@
-
 TABLES=lm_data ar_assets_accts_rcvbl ar_assets_fixed			\
        ar_assets_investments ar_assets_loans_rcvbl ar_assets_other	\
        ar_assets_total ar_disbursements_benefits			\
@@ -13,7 +12,6 @@ TABLES=lm_data ar_assets_accts_rcvbl ar_assets_fixed			\
 YEARS=$(shell python scripts/years.py)
 
 
-.PRECIOUS : $(patsubst %,%.csv,$(TABLES))
 odpr.db : initialize.sql $(patsubst %,%.csv,$(TABLES))
 	sqlite3 $@ < $<
 	for table in $(TABLES); do \
@@ -30,10 +28,6 @@ initialize.sql : $(patsubst %,%.sql,$(TABLES))
 
 %.csv : $(patsubst %,\%_data_%.txt,$(YEARS))
 	cat $^ | python scripts/to_csv.py > $@
-
-%.txt : $(patsubst %,\%_data_%.txt,$(YEARS))
-	cat $^ > $@
-
 
 ar_assets_accts_rcvbl_data_%.txt : %.zip
 	unzip -p $< $@ | tail -n +2 > $@
@@ -107,6 +101,5 @@ lm_data_data_%.txt : %.zip
 %_meta.txt : 2000.zip
 	unzip -p $< $@ > $@
 
-.PRECIOUS : $(patsubst %,%.zip,$(YEARS))
-%.zip : yearly_filings.json
+%.zip :
 	python scripts/yearly_filing.py $* $@ 
