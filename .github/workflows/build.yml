@@ -31,13 +31,3 @@ jobs:
       - name: build database
         run: make
 
-      - name: setup public directory
-        run: |
-          mkdir public
-          zip odpr.db.zip odpr.db -s 100m
-          mv odpr.db.z* public
-      - name: Github Pages Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
-           publish_dir: ./public
