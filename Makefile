@@ -1,3 +1,6 @@
+.DELETE_ON_ERROR:
+SHELL=bash -e -o pipefail
+
 TABLES=lm_data ar_assets_accts_rcvbl ar_assets_fixed			\
        ar_assets_investments ar_assets_loans_rcvbl ar_assets_other	\
        ar_assets_total ar_disbursements_benefits			\
