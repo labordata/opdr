@@ -2,8 +2,6 @@ import sys
 import requests
 
 
-TARGET_YEAR = sys.argv[1]
-
 while True:
     s = requests.Session()
 
@@ -12,7 +10,7 @@ while True:
     response = s.post('https://olmsapps.dol.gov/olpdr/GetYearlyDownlaodFilenamesServlet')
 
     filings = response.json()
-    if TARGET_YEAR in filings['filenames']:
+    if '2000' in filings['filenames']:
         break
 
 filing_lookup = {year: filename
@@ -20,7 +18,7 @@ filing_lookup = {year: filename
                  in zip(filings["filenames"],
                         filings["encriptedFilenames"])}
 
-response = s.get('https://olmsapps.dol.gov/olpdr/GetYearlyFileServlet?report=' + filing_lookup[TARGET_YEAR], stream=True)
+response = s.get('https://olmsapps.dol.gov/olpdr/GetYearlyFileServlet?report=' + filing_lookup[sys.argv[1]], stream=True)
 
 with open(sys.argv[2], 'wb') as f:
     f.write(response.content)
