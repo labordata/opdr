@@ -4,9 +4,9 @@ import pathlib
 
 field_type_mapping = {'CHAR': 'TEXT',
                       'INTEGER': 'INTEGER',
-                      'TIMESTAMP': 'TIMESTAMP',
+                      'TIMESTAMP': 'TEXT',
                       'VARCHAR': 'TEXT',
-                      'DATE': 'DATE'}
+                      'DATE': 'TEXT'}
                       
 
 filename = pathlib.Path(sys.argv[1])
