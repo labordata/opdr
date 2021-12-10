@@ -1,36 +1,55 @@
-update lm_data
-set next_election = trim(next_election);
+UPDATE
+    lm_data
+SET
+    next_election = trim(next_election);
 
-update lm_data
-set next_election = null
-where next_election = '';
+UPDATE
+    lm_data
+SET
+    next_election = NULL
+WHERE
+    next_election = '';
 
-update lm_data
-set next_election = replace(next_election, '  ', ' ');
-update lm_data
-set next_election = replace(next_election, '  ', ' ');
-update lm_data
-set next_election = replace(next_election, '  ', ' ');
+UPDATE
+    lm_data
+SET
+    next_election = replace(next_election, '  ', ' ');
 
-update lm_data
-set next_election = replace(replace(next_election, ' /', '/'), '/ ', '/');
+UPDATE
+    lm_data
+SET
+    next_election = replace(next_election, '  ', ' ');
 
-update lm_data
-set next_election = replace(replace(next_election, ' -', '-'), '- ', '-');
+UPDATE
+    lm_data
+SET
+    next_election = replace(next_election, '  ', ' ');
 
-update lm_data
-set next_election = replace(replace(next_election, ' ,', ','), ', ', ',');
+UPDATE
+    lm_data
+SET
+    next_election = replace(replace(next_election, ' /', '/'), '/ ', '/');
+
+UPDATE
+    lm_data
+SET
+    next_election = replace(replace(next_election, ' -', '-'), '- ', '-');
+
+UPDATE
+    lm_data
+SET
+    next_election = replace(replace(next_election, ' ,', ','), ', ', ',');
 
 -- This loses a precision for dates written like 'December 10, 2021', these
 -- will turn into 2021-12
 UPDATE
     lm_data
 SET
-    next_election = CASE
-    WHEN next_election GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]' OR next_election GLOB '[0-9][0-9][0-9][0-9]' OR next_election GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]' THEN next_election
+    next_election = CASE WHEN next_election GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]'
+        OR next_election GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]' THEN
+        next_election
     WHEN next_election NOT GLOB '*[1-9]*' THEN
         NULL
-	
     WHEN next_election = 0 THEN
         NULL
     WHEN next_election LIKE '%SEE%' THEN
@@ -50,6 +69,9 @@ SET
             ELSE
                 '20' || substr(next_election, 3, 2) || '-' || substr(next_election, 1, 2)
             END
+        WHEN length(next_election) = 4
+            AND substring(next_election, 1, 2) IN ('19', '20') THEN
+            next_election
         WHEN length(next_election) = 3 THEN
             CASE WHEN substr(next_election, 2, 2) > '50' THEN
                 '19' || substr(next_election, 2, 2) || '-0' || substr(next_election, 1, 1)
@@ -63,7 +85,7 @@ SET
                 '20' || next_election
             END
         ELSE
-            null
+            NULL
         END
     WHEN next_election GLOB '[0-9][0-9][^0-9][0-9][0-9][0-9][0-9]' THEN
         substr(next_election, 4, 4) || '-' || substr(next_election, 1, 2)
@@ -210,11 +232,13 @@ SET
             '20' || substr(next_election, length(next_election) - 2 + 1, 2) || '-12'
         END
     ELSE
-        null
+        NULL
     END;
 
-update lm_data
-set next_election = null
-where cast(substr(next_election, 1, 4) as int) - yr_covered > 15;
-
+UPDATE
+    lm_data
+SET
+    next_election = NULL
+WHERE
+    cast(substr(next_election, 1, 4) AS int) - yr_covered > 15;
 
