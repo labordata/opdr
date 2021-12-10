@@ -19,6 +19,9 @@ odpr.db : initialize.sql $(patsubst %,%.csv,$(TABLES))
 	for table in $(TABLES); do \
            sqlite3 $@ -csv -bail ".import $$table.csv $$table"  ; \
         done
+	sqlite3 $@ < scripts/trimify.sql > table_trim.sql && \
+             sqlite3 $@ < table_trim.sql > trim.sql && \
+             sqlite3 $@ < trim.sql
 	sqlite3 $@ < scripts/nullify.sql > table_nullify.sql && \
              sqlite3 $@ < table_nullify.sql > null.sql && \
              sqlite3 $@ < null.sql
