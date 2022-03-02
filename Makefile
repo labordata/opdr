@@ -14,7 +14,7 @@ TABLES=lm_data ar_assets_accts_rcvbl ar_assets_fixed			\
 
 YEARS=$(shell python scripts/years.py)
 
-odpr.db : initialize.sql $(patsubst %,%.csv,$(TABLES))
+opdr.db : initialize.sql $(patsubst %,%.csv,$(TABLES))
 	sqlite3 $@ < $<
 	for table in $(TABLES); do \
            sqlite3 $@ -csv -bail ".import $$table.csv $$table"  ; \
