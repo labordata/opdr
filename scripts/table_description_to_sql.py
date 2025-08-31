@@ -5,6 +5,7 @@ import pathlib
 field_type_mapping = {
     "CHAR": "TEXT",
     "INTEGER": "INTEGER",
+    "BIGINT": "INTEGER",
     "TIMESTAMP": "TEXT",
     "VARCHAR": "TEXT",
     "DATE": "TEXT",
