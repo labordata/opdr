@@ -1,11 +1,17 @@
 import sys
 import requests
+import urllib3
+
+# olmsapps.dol.gov stopped sending its intermediate cert in April 2026,
+# breaking chain validation. Skip verification — this is a public bulk data feed.
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 for attempt in range(1000):
     print(f"attempt: {attempt}")
 
     s = requests.Session()
+    s.verify = False
 
     s.get("https://olmsapps.dol.gov/olpdr/?Union%20Reports/Yearly%20Data%20Download/")
 
