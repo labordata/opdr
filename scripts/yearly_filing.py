@@ -1,4 +1,5 @@
 import sys
+import time
 import requests
 import urllib3
 
@@ -7,21 +8,29 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
+filings = None
 for attempt in range(1000):
     print(f"attempt: {attempt}")
 
-    s = requests.Session()
-    s.verify = False
+    try:
+        s = requests.Session()
+        s.verify = False
 
-    s.get("https://olmsapps.dol.gov/olpdr/?Union%20Reports/Yearly%20Data%20Download/")
+        s.get(
+            "https://olmsapps.dol.gov/olpdr/?Union%20Reports/Yearly%20Data%20Download/"
+        )
 
-    response = s.post(
-        "https://olmsapps.dol.gov/olpdr/GetYearlyDownlaodFilenamesServlet"
-    )
+        response = s.post(
+            "https://olmsapps.dol.gov/olpdr/GetYearlyDownlaodFilenamesServlet"
+        )
 
-    filings = response.json()
-    if "2000" in filings["filenames"]:
-        break
+        filings = response.json()
+        if "2000" in filings["filenames"]:
+            break
+    except (requests.RequestException, ValueError, KeyError) as e:
+        print(f"attempt {attempt} failed: {e!r}")
+
+    time.sleep(2)
 else:
     raise ValueError("Couldn't get the download link")
 
